@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { FC } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { Button } from "./button";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
@@ -14,6 +14,8 @@ import {
   CommandList,
 } from "./command";
 import { ArrowDownUp, ChevronsUpDown } from "lucide-react";
+import { BaseUserType } from "@/hooks/useAuth";
+import { getInitials } from "@/utils/generic";
 
 const EDITORS: {
   id: number;
@@ -25,7 +27,12 @@ const EDITORS: {
   },
 ];
 
-const TeamList = () => {
+type Props = {
+  profileUrlImage?: string;
+  editors?: BaseUserType[];
+} & Omit<BaseUserType, "verified">;
+
+const TeamList: FC<Props> = ({ id, name, role, profileUrlImage, editors }) => {
   const [open, setOpen] = React.useState(false);
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -38,14 +45,10 @@ const TeamList = () => {
           className={cn("gap-2 justify-between")}
         >
           <Avatar className="h-8 w-8 p-1">
-            <AvatarImage
-              // src={`https://avatar.vercel.sh/${selectedTeam.value}.png`}
-              alt={"selectedTeam.label"}
-              className="grayscale"
-            />
-            <AvatarFallback>NM</AvatarFallback>
+            <AvatarImage alt={"selectedTeam.label"} className="grayscale" />
+            <AvatarFallback>{getInitials(name)}</AvatarFallback>
           </Avatar>
-          {"Nilanjan Mandal"}
+          {name}
           <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -53,12 +56,15 @@ const TeamList = () => {
         <Command>
           <CommandList>
             <CommandEmpty>No editors found.</CommandEmpty>
-            {EDITORS.map((editor) => (
+            {editors?.map((editor) => (
               <CommandGroup key={editor.id} heading={"Editors"}>
                 <CommandItem key={editor.name} className="text-sm">
                   <Avatar className="mr-2 h-5 w-5">
-                    <AvatarImage alt={editor.name} className="grayscale" />
-                    <AvatarFallback>SC</AvatarFallback>
+                    <AvatarImage
+                      alt={editor.name ?? editor.id.toString()}
+                      className="grayscale"
+                    />
+                    <AvatarFallback>{getInitials(editor.name)}</AvatarFallback>
                   </Avatar>
                   {editor.name}
                 </CommandItem>

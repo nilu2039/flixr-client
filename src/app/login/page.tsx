@@ -10,8 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import EditorLogin from "@/components/ui/editor-login";
 import { googleLogin } from "@/utils/auth";
-import { KeyRound } from "lucide-react";
 
 const Login = () => {
   return (
@@ -28,10 +28,8 @@ const Login = () => {
             <Button onClick={googleLogin}>
               <FcGoogle className="mr-2 h-4 w-4" /> Login as Admin
             </Button>
-            <Button>
-              <KeyRound className="mr-2 h-4 w-4" />
-              Login as Editor
-            </Button>
+
+            <EditorLogin />
           </div>
         </CardContent>
       </Card>

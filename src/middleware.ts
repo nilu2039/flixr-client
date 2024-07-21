@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
     (route) => path.startsWith(route) || path === route
   );
 
-  const isAuthenticated = authCookie ? verifySession(authCookie) : false;
+  const isAuthenticated = authCookie ? await verifySession(authCookie) : false;
 
   if (isAuthenticated && path === loginRoute) {
     url.pathname = "/dashboard";
@@ -36,13 +36,13 @@ function redirectToLogin(url: NextURL) {
 
 async function verifySession(authCookie: RequestCookie) {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
   try {
     const response = await fetch(`${apiUrl}/auth/me`, {
       headers: {
-        cookie: `qid=${authCookie}`,
+        cookie: `qid=${authCookie.value}`,
       },
       credentials: "include",
+      redirect: "follow",
     });
     if (response.ok) {
       const data = await response.json();
