@@ -45,14 +45,18 @@ const TeamList: FC<Props> = ({ id, name, role, profileUrlImage, editors }) => {
           className={cn("gap-2 justify-between")}
         >
           <Avatar className="h-8 w-8 p-1">
-            <AvatarImage alt={"selectedTeam.label"} className="grayscale" />
+            <AvatarImage
+              src={profileUrlImage}
+              alt={name ?? ""}
+              className="grayscale"
+            />
             <AvatarFallback>{getInitials(name)}</AvatarFallback>
           </Avatar>
           {name}
           <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="base:w-[50vw] sm:w-[30vw] md:w-[25vw] lg:w-[16vw] p-0">
         <Command>
           <CommandList>
             <CommandEmpty>No editors found.</CommandEmpty>

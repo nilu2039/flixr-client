@@ -94,13 +94,19 @@ const EditorLogin = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="password" {...field} />
+                    <Input placeholder="password" {...field} type="password" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <Button
+              type="submit"
+              disabled={loginMutation.isLoading}
+              loading={loginMutation.isLoading}
+            >
+              Login
+            </Button>
           </form>
         </Form>
       </DialogContent>

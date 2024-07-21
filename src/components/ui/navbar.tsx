@@ -14,13 +14,23 @@ const Navbar: FC<Props> = ({ id, name, role, profileUrlImage, editors }) => {
   return (
     <div className="border-b overflow-hidden">
       <nav className={cn("flex items-center justify-between py-4 px-6")}>
-        <TeamList
-          id={id}
-          name={name}
-          role={role}
-          profileUrlImage={profileUrlImage}
-          editors={editors}
-        />
+        {role === "admin" ? (
+          <>
+            <TeamList
+              id={id}
+              name={name}
+              role={role}
+              profileUrlImage={profileUrlImage}
+              editors={editors}
+            />
+          </>
+        ) : (
+          <div className="flex items-center gap-2">
+            <p className="text-lg">{name}</p>
+            <p className="text-sm text-gray-400">{role}</p>
+          </div>
+        )}
+
         <Avatar>
           <AvatarImage src={profileUrlImage} />
           <AvatarFallback>{getInitials(name)}</AvatarFallback>
