@@ -35,7 +35,7 @@ function redirectToLogin(url: NextURL) {
 }
 
 async function verifySession(authCookie: RequestCookie) {
-  const apiUrl = process.env.API_URL;
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   try {
     const response = await fetch(`${apiUrl}/auth/me`, {
