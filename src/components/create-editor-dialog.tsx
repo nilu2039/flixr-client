@@ -29,11 +29,13 @@ const formSchema = z.object({
 
 const createEditorSchema = z.object({
   success: z.boolean(),
-  data: z.object({
-    username: z.string(),
-    password: z.string(),
-    status: z.string(),
-  }),
+  data: z
+    .object({
+      username: z.string(),
+      password: z.string(),
+      status: z.string(),
+    })
+    .optional(),
   error: errorSchema.optional(),
 });
 

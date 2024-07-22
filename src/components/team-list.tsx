@@ -6,7 +6,7 @@ import { cn } from "@/utils/ui";
 import { Check, ChevronsUpDown, CirclePlus } from "lucide-react";
 import React, { FC, useState } from "react";
 import CreateEditorDialog from "./create-editor-dialog";
-import ShowCredentialsDialog from "./show-credentials";
+import ShowCredentialsDialog from "./show-credentials-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import {
