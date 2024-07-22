@@ -1,16 +1,16 @@
+import { Video } from "@/hooks/useAllVideos";
 import api from "@/lib/api";
 import { errorSchema } from "@/schema/global";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Clapperboard, Upload } from "lucide-react";
+import { Clapperboard, Upload, X } from "lucide-react";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { toast } from "sonner";
 import { useFilePicker } from "use-file-picker";
 import { z } from "zod";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
-import { X } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -56,13 +56,29 @@ const UploadDialog: FC<Props> = ({
     resolver: zodResolver(formSchema),
   });
 
+  const queryClient = useQueryClient();
+
+  const updateVideoUploadStatus = useMutation({
+    mutationKey: ["updateVideoUploadStatus"],
+    mutationFn: async (values: { videoId: string; failed: boolean }) => {
+      try {
+        const { data } = await api.post("/update-video-upload-status", values);
+        return data;
+      } catch (error) {
+        throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["all_videos"]);
+    },
+  });
+
   const getPresignedUrlMutation = useMutation({
     mutationKey: ["getPresignedUrl"],
     mutationFn: async (
       values: z.infer<typeof getPresignedUrlPayloadSchema>
     ) => {
       try {
-        console.log("PAYLOAD: ", values);
         const { data } = await api.post("/get-upload-presigned-url", values);
         const res = getPresignedUrlResponseSchema.safeParse(data);
         return res;
@@ -71,7 +87,6 @@ const UploadDialog: FC<Props> = ({
       }
     },
     onSuccess: (values) => {
-      console.log("DATA", values.data?.data?.uploadUrl);
       const uploadUrl = values.data?.data?.uploadUrl;
       if (!uploadUrl) {
         toast.error("Failed to get upload", { richColors: true });
@@ -85,26 +100,33 @@ const UploadDialog: FC<Props> = ({
         }),
         {
           loading: "Uploading video, don't refresh or close the tab.",
-          success: "Video uploaded successfully",
-          error: "Failed to upload video",
+          success: () => {
+            queryClient.invalidateQueries(["all_videos"]);
+            return "Video uploaded successfully";
+          },
+          error: () => {
+            const videoId = values.data?.data?.videoId;
+            if (!videoId) return "Failed to upload video";
+            updateVideoUploadStatus.mutate({
+              videoId,
+              failed: true,
+            });
+            return "Failed to upload video";
+          },
           richColors: true,
         }
       );
     },
     onError: (error) => {
-      console.log("ERROR: ", error);
       toast.error("Failed to get upload", { richColors: true });
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("VALUES", values);
-    console.log("FILES", plainFiles);
     if (plainFiles.length === 0) {
       toast.error("Please upload video file.", { richColors: true });
       return;
     }
-    console.log("FILES", plainFiles);
     getPresignedUrlMutation.mutate({
       title: values.title,
       description: values.description,
