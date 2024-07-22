@@ -21,7 +21,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./form";
+} from "./ui/form";
 import { useMutation } from "react-query";
 import api from "@/lib/api";
 import { useRouter } from "next/navigation";
@@ -36,7 +36,7 @@ const EditorLogin = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
-  const loginMutation = useMutation({
+  const editorLoginMutation = useMutation({
     mutationKey: ["login"],
     mutationFn: async (values: z.infer<typeof formSchema>) => {
       try {
@@ -55,7 +55,7 @@ const EditorLogin = () => {
     },
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
-    loginMutation.mutate(values);
+    editorLoginMutation.mutate(values);
   }
   return (
     <Dialog>
@@ -102,8 +102,8 @@ const EditorLogin = () => {
             />
             <Button
               type="submit"
-              disabled={loginMutation.isLoading}
-              loading={loginMutation.isLoading}
+              disabled={editorLoginMutation.isLoading}
+              loading={editorLoginMutation.isLoading}
             >
               Login
             </Button>

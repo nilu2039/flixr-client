@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import EditorLogin from "@/components/ui/editor-login";
+import EditorLogin from "@/components/editor-login";
 import { googleLogin } from "@/utils/auth";
 
 const Login = () => {

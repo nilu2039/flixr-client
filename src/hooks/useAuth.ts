@@ -1,12 +1,13 @@
 "use client";
 
 import api from "@/lib/api";
+import { errorSchema } from "@/schema/global";
 import { useQuery } from "react-query";
 import { z } from "zod";
 
 const baseSchema = z.object({
   id: z.number(),
-  name: z.string().optional().nullable(),
+  name: z.string(),
   role: z.enum(["admin", "editor"]),
   verified: z.boolean(),
 });
@@ -21,12 +22,7 @@ const userSchema = z.object({
       }),
     })
     .optional(),
-  error: z
-    .object({
-      message: z.string(),
-      details: z.any().optional(),
-    })
-    .optional(),
+  error: errorSchema.optional(),
 });
 
 export type BaseUserType = z.infer<typeof baseSchema>;
@@ -45,7 +41,7 @@ const fetchUsers = async (): Promise<z.infer<typeof userSchema>> => {
 
 const useAuth = () => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["auth"],
+    queryKey: ["user"],
     queryFn: fetchUsers,
   });
   return {

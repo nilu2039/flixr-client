@@ -9,7 +9,6 @@ const Dashboard = () => {
   if (isLoading) return <div>Loading...</div>;
   if (isError || !user?.data?.user) return <div>Error...</div>;
   const { id, name, role, profileUrlImage, editors } = user.data.user;
-  console.log(user);
   return (
     <div>
       <Navbar

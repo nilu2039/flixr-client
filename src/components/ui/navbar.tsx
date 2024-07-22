@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/utils/ui";
-import TeamList from "./team-list";
+import TeamList from "../team-list";
 import { FC } from "react";
 import { getInitials } from "@/utils/generic";
 import { BaseUserType } from "@/hooks/useAuth";
