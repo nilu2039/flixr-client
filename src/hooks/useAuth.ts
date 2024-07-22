@@ -41,7 +41,7 @@ const fetchUsers = async (): Promise<z.infer<typeof userSchema>> => {
 
 const useAuth = () => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["user"],
+    queryKey: "auth_users",
     queryFn: fetchUsers,
   });
   return {

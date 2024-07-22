@@ -61,7 +61,7 @@ const EditorLogin = () => {
     <Dialog>
       <DialogTrigger asChild>
         <Button>
-          <KeyRound className="mr-2 h-4 w-4" />
+          <KeyRound className="mr-2 h-4 w-4 text-primary-foreground" />
           Login as Editor
         </Button>
       </DialogTrigger>

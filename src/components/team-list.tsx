@@ -6,7 +6,7 @@ import { cn } from "@/utils/ui";
 import { Check, ChevronsUpDown, CirclePlus } from "lucide-react";
 import React, { FC, useState } from "react";
 import CreateEditorDialog from "./create-editor-dialog";
-import ShowCredentialsDialog from "./show-credentials";
+import ShowCredentialsDialog from "./show-credentials-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import {
@@ -82,9 +82,8 @@ const TeamList: FC<Props> = ({ id, name, role, profileUrlImage, editors }) => {
                   {getInitials(selectedUser.name)}
                 </AvatarFallback>
               </Avatar>
-              {/* {name} */}
               {selectedUser.name}
-              <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
+              <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50 text-foreground" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="base:w-[50vw] sm:w-[30vw] md:w-[25vw] lg:w-[16vw] p-0">
@@ -111,7 +110,9 @@ const TeamList: FC<Props> = ({ id, name, role, profileUrlImage, editors }) => {
                         </Avatar>
                         {groups.admin.name}
                       </div>
-                      {selectedUser.id === groups.admin.id ? <Check /> : null}
+                      {selectedUser.id === groups.admin.id ? (
+                        <Check className="w-4 h-4 text-muted-foreground" />
+                      ) : null}
                     </div>
                   </CommandItem>
                 </CommandGroup>
@@ -139,7 +140,9 @@ const TeamList: FC<Props> = ({ id, name, role, profileUrlImage, editors }) => {
                           </Avatar>
                           {editor.name}
                         </div>
-                        {selectedUser.id === editor.id ? <Check /> : null}
+                        {selectedUser.id === editor.id ? (
+                          <Check className="w-4 h-4 text-muted-foreground" />
+                        ) : null}
                       </div>
                     </CommandItem>
                   ))}
@@ -155,7 +158,7 @@ const TeamList: FC<Props> = ({ id, name, role, profileUrlImage, editors }) => {
                         setShowCreateEditorDialog(true);
                       }}
                     >
-                      <CirclePlus className="mr-2 h-5 w-5" />
+                      <CirclePlus className="mr-2 w-5 h-5 text-foreground" />
                       Create Editor
                     </CommandItem>
                   </DialogTrigger>
