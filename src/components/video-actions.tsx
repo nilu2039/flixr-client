@@ -5,8 +5,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Video } from "@/hooks/useAllVideos";
+import { Video } from "@/hooks/useVideo";
 import api from "@/lib/api";
+import { useUpdateStatusMutation } from "@/mutations/video.mutations";
 import { AxiosError } from "axios";
 import { MoreHorizontal } from "lucide-react";
 import { FC } from "react";
@@ -18,60 +19,10 @@ type Props = {
 };
 
 const VideoActions: FC<Props> = ({ row }) => {
-  const queryClient = useQueryClient();
   const { videoId } = row;
-  const updateStatusMutation = useMutation({
-    mutationKey: ["update_status", videoId],
-    mutationFn: async (status: string) => {
-      try {
-        return await api.post("/update-video-status", { videoId, status });
-      } catch (error) {
-        throw error;
-      }
-    },
-    onSuccess: () => {
-      if (!videoId) return;
-      uploadYoutubeMutation.mutate({ videoId });
-    },
-    onError: (error: AxiosError) => {
-      //@ts-ignore
-      const errorMessage = error?.response?.data?.error?.message;
-      toast.error(errorMessage ? errorMessage : "Failed to update status", {
-        richColors: true,
-      });
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries("all_videos");
-    },
-  });
 
-  const uploadYoutubeMutation = useMutation({
-    mutationKey: ["upload_youtube", videoId],
-    mutationFn: async ({ videoId }: { videoId: string }) => {
-      try {
-        return await api.post("/upload-youtube", { videoId });
-      } catch (error) {
-        throw error;
-      }
-    },
-    onSuccess: () => {
-      toast.success("Upload started, please check back later.", {
-        richColors: true,
-      });
-    },
+  const { updateStatusMutation } = useUpdateStatusMutation(videoId);
 
-    onError: (error: AxiosError) => {
-      //@ts-ignore
-      const errorMessage = error?.response?.data?.error?.message;
-      toast.error(
-        errorMessage ? errorMessage : "Failed to upload video to youtube",
-        { richColors: true }
-      );
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries("all_videos");
-    },
-  });
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -83,13 +34,20 @@ const VideoActions: FC<Props> = ({ row }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuItem
           onClick={() => {
-            updateStatusMutation.mutate("accepted");
+            updateStatusMutation.mutate({
+              status: "accepted",
+              uploadYT: true,
+            });
           }}
         >
           Accept and Upload
         </DropdownMenuItem>
         <DropdownMenuItem
-        //   onClick={() => navigator.clipboard.writeText(payment.id)}
+          onClick={() => {
+            updateStatusMutation.mutate({
+              status: "rejected",
+            });
+          }}
         >
           Reject
         </DropdownMenuItem>

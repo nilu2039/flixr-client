@@ -25,6 +25,7 @@ import {
 import { useMutation } from "react-query";
 import api from "@/lib/api";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   username: z.string(),
@@ -50,7 +51,10 @@ const EditorLogin = () => {
         router.push("/dashboard");
       }
     },
-    onError: () => {
+    onError: (error) => {
+      //@ts-ignore
+      const errorMessage = error?.response?.data?.error?.message;
+      toast.error(errorMessage, { richColors: true });
       router.push("/login");
     },
   });
