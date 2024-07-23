@@ -1,11 +1,11 @@
 "use client";
 
 import Navbar from "@/components/ui/navbar";
-import useAuth from "@/hooks/useAuth";
-import React from "react";
-import { DataTable } from "./data-table";
-import { columns } from "./columns";
 import useAllVideos from "@/hooks/useAllVideos";
+import useAuth from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import { dashboardColumns } from "./columns";
+import { DataTable } from "./data-table";
 
 const Dashboard = () => {
   const { user, isLoading, isError } = useAuth();
@@ -25,7 +25,7 @@ const Dashboard = () => {
         profileUrlImage={profileUrlImage}
         editors={editors}
       />
-      <DataTable columns={columns} data={videos.data.data} />
+      <DataTable columns={dashboardColumns} data={videos.data.data} />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { Video } from "@/hooks/useAllVideos";
+import { Video } from "@/hooks/useVideo";
 import { Badge } from "./ui/badge";
 
 const UploadStatusBadge = ({ status }: { status: Video["uploadStatus"] }) => {
