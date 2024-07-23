@@ -1,4 +1,3 @@
-import { Video } from "@/hooks/useAllVideos";
 import api from "@/lib/api";
 import { errorSchema } from "@/schema/global";
 import { zodResolver } from "@hookform/resolvers/zod";

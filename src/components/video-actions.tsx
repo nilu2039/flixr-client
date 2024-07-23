@@ -20,17 +20,24 @@ type Props = {
 const VideoActions: FC<Props> = ({ row }) => {
   const queryClient = useQueryClient();
   const { videoId } = row;
+
   const updateStatusMutation = useMutation({
     mutationKey: ["update_status", videoId],
-    mutationFn: async (status: string) => {
+    mutationFn: async ({
+      status,
+      uploadYT = false,
+    }: {
+      status: Video["status"];
+      uploadYT?: boolean;
+    }) => {
       try {
         return await api.post("/update-video-status", { videoId, status });
       } catch (error) {
         throw error;
       }
     },
-    onSuccess: () => {
-      if (!videoId) return;
+    onSuccess: (_, { uploadYT }) => {
+      if (!videoId || !uploadYT) return;
       uploadYoutubeMutation.mutate({ videoId });
     },
     onError: (error: AxiosError) => {
@@ -57,6 +64,7 @@ const VideoActions: FC<Props> = ({ row }) => {
     onSuccess: () => {
       toast.success("Upload started, please check back later.", {
         richColors: true,
+        duration: 10000,
       });
     },
 
@@ -83,13 +91,20 @@ const VideoActions: FC<Props> = ({ row }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuItem
           onClick={() => {
-            updateStatusMutation.mutate("accepted");
+            updateStatusMutation.mutate({
+              status: "accepted",
+              uploadYT: true,
+            });
           }}
         >
           Accept and Upload
         </DropdownMenuItem>
         <DropdownMenuItem
-        //   onClick={() => navigator.clipboard.writeText(payment.id)}
+          onClick={() => {
+            updateStatusMutation.mutate({
+              status: "rejected",
+            });
+          }}
         >
           Reject
         </DropdownMenuItem>
