@@ -1,6 +1,7 @@
 "use client";
 
 import { BaseUserType } from "@/hooks/useAuth";
+import useEditorStore from "@/store/useEditorStore";
 import { getInitials } from "@/utils/generic";
 import { cn } from "@/utils/ui";
 import { Check, ChevronsUpDown, CirclePlus } from "lucide-react";
@@ -27,6 +28,8 @@ type Props = {
 
 const TeamList: FC<Props> = ({ id, name, role, profileUrlImage, editors }) => {
   const [open, setOpen] = React.useState(false);
+  const { setEditor } = useEditorStore();
+
   const [editorCredentials, setEditorCredentials] = useState<{
     username: string;
     password: string;
@@ -94,6 +97,7 @@ const TeamList: FC<Props> = ({ id, name, role, profileUrlImage, editors }) => {
                     className="text-sm"
                     onSelect={() => {
                       setSelectedUser(groups.admin);
+                      setEditor(null);
                       setOpen(false);
                     }}
                   >
@@ -124,6 +128,7 @@ const TeamList: FC<Props> = ({ id, name, role, profileUrlImage, editors }) => {
                       className="text-sm"
                       onSelect={() => {
                         setSelectedUser(editor);
+                        setEditor(editor);
                         setOpen(false);
                       }}
                     >

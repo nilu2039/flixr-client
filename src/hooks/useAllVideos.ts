@@ -3,6 +3,7 @@ import api from "@/lib/api";
 import { z } from "zod";
 import { error } from "console";
 import { errorSchema } from "@/schema/global";
+import useEditorStore from "@/store/useEditorStore";
 
 const videoSchema = z.object({
   success: z.boolean(),
@@ -27,16 +28,19 @@ const videoSchema = z.object({
 export type Video = z.infer<typeof videoSchema>["data"][0];
 
 const useAllVideos = () => {
+  const { editor } = useEditorStore();
   const {
     data: videos,
     isLoading,
     isError,
     error,
   } = useQuery({
-    queryKey: ["all_videos"],
+    queryKey: ["all_videos", editor?.id],
     queryFn: async () => {
       try {
-        const { data } = await api.get("/get-all-videos");
+        const { data } = await api.get(
+          `/get-all-videos?editorId=${editor?.id ?? ""}`
+        );
         const res = videoSchema.safeParse(data);
         return res;
       } catch (error) {
