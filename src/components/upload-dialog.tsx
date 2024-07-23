@@ -60,7 +60,10 @@ const UploadDialog: FC<Props> = ({
 
   const updateVideoUploadStatus = useMutation({
     mutationKey: ["updateVideoUploadStatus"],
-    mutationFn: async (values: { videoId: string; failed: boolean }) => {
+    mutationFn: async (values: {
+      videoId: string;
+      status: "pending" | "failed";
+    }) => {
       try {
         const { data } = await api.post("/update-video-upload-status", values);
         return data;
@@ -86,13 +89,26 @@ const UploadDialog: FC<Props> = ({
         throw error;
       }
     },
-    onSuccess: (values) => {
+    onSuccess: async (values) => {
       const uploadUrl = values.data?.data?.uploadUrl;
       if (!uploadUrl) {
         toast.error("Failed to get upload", { richColors: true });
         return;
       }
+      const videoId = values.data?.data?.videoId;
+
+      if (!videoId) {
+        toast.error("Failed to get upload", { richColors: true });
+        return;
+      }
+
+      await updateVideoUploadStatus.mutateAsync({
+        videoId,
+        status: "pending",
+      });
+
       onSuccessfulCreate();
+
       toast.promise(
         fetch(uploadUrl, {
           method: "PUT",
@@ -105,11 +121,9 @@ const UploadDialog: FC<Props> = ({
             return "Video uploaded successfully";
           },
           error: () => {
-            const videoId = values.data?.data?.videoId;
-            if (!videoId) return "Failed to upload video";
             updateVideoUploadStatus.mutate({
               videoId,
-              failed: true,
+              status: "failed",
             });
             return "Failed to upload video";
           },

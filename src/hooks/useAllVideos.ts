@@ -18,6 +18,11 @@ const videoSchema = z.object({
       uploadStatus: z.enum(["idle", "pending", "completed", "failed"]),
       status: z.enum(["draft", "accepted", "rejected"]),
       youtubeUploadStatus: z.enum(["draft", "pending", "completed", "failed"]),
+      uploader: z.object({
+        id: z.number(),
+        name: z.string(),
+        role: z.enum(["admin", "editor"]),
+      }),
       createdAt: z.coerce.date(),
       updatedAt: z.coerce.date(),
     })

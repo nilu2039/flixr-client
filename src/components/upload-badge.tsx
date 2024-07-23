@@ -87,4 +87,20 @@ const YoutubeUploadStatusBadge = ({
   return <Badge className={`${badgeColor}`}>{badgeText}</Badge>;
 };
 
-export { UploadStatusBadge, YoutubeUploadStatusBadge, VideoStatusBadge };
+const RoleBadge = ({ role }: { role: Video["uploader"]["role"] }) => {
+  switch (role) {
+    case "admin":
+      return <Badge className="bg-green-500">Admin</Badge>;
+    case "editor":
+      return <Badge className="bg-blue-500">Editor</Badge>;
+    default:
+      return <Badge className="bg-gray-500">Unknown</Badge>;
+  }
+};
+
+export {
+  UploadStatusBadge,
+  YoutubeUploadStatusBadge,
+  VideoStatusBadge,
+  RoleBadge,
+};

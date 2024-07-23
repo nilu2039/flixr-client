@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  RoleBadge,
   UploadStatusBadge,
   VideoStatusBadge,
   YoutubeUploadStatusBadge,
@@ -16,8 +17,17 @@ export const columns: ColumnDef<Video>[] = [
     header: "Title",
   },
   {
-    accessorKey: "description",
-    header: "Description",
+    accessorKey: "uploader",
+    header: "Uploader",
+    cell: ({ row }) => {
+      const uploader = row.original.uploader;
+      return (
+        <div className="flex flex-row gap-2">
+          <p>{uploader.name}</p>
+          <RoleBadge role={uploader.role} />
+        </div>
+      );
+    },
   },
   {
     accessorKey: "fileSize",
