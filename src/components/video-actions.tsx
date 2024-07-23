@@ -5,14 +5,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import useAuth from "@/hooks/useAuth";
 import { Video } from "@/hooks/useVideo";
-import api from "@/lib/api";
 import { useUpdateStatusMutation } from "@/mutations/video.mutations";
-import { AxiosError } from "axios";
 import { MoreHorizontal } from "lucide-react";
 import { FC } from "react";
-import { useMutation, useQueryClient } from "react-query";
-import { toast } from "sonner";
 
 type Props = {
   row: Video;
@@ -20,8 +17,13 @@ type Props = {
 
 const VideoActions: FC<Props> = ({ row }) => {
   const { videoId } = row;
+  const { user } = useAuth();
 
   const { updateStatusMutation } = useUpdateStatusMutation(videoId);
+
+  if (user?.data?.user.role !== "admin") {
+    return null;
+  }
 
   return (
     <DropdownMenu>

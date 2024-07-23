@@ -17,6 +17,11 @@ export async function middleware(request: NextRequest) {
 
   const isAuthenticated = authCookie ? await verifySession(authCookie) : false;
 
+  if (path === "/") {
+    url.pathname = "/dashboard";
+    return NextResponse.redirect(url);
+  }
+
   if (isAuthenticated && path === loginRoute) {
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
