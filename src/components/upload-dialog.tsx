@@ -19,6 +19,7 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
 
 const formSchema = z.object({
   title: z.string(),
@@ -179,7 +180,7 @@ const UploadDialog: FC<Props> = ({
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Input placeholder="Video description..." {...field} />
+                    <Textarea placeholder="Video description..." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
