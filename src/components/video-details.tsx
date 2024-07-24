@@ -22,9 +22,9 @@ type Props = {
   video: Video | null;
 };
 
-const VideoDetailsDialog = ({ video }: Props) => {
+const VideoDetails = ({ video }: Props) => {
   return (
-    <div className="flex flex-col items-center justify-center container p-10 gap-10">
+    <div className="flex flex-col items-center justify-center container p-10 gap-10 ">
       <div className="flex flex-col gap-4 w-full h-full">
         {video?.videoUrl ? (
           <div className="w-full lg:w-9/12">
@@ -41,23 +41,25 @@ const VideoDetailsDialog = ({ video }: Props) => {
             <Ban className="w-20 h-20 text-foreground" />
           </div>
         )}
-        <h1 className="text-foreground text-3xl font-medium text-left">
-          {video?.title}
-        </h1>
-        {video?.uploader ? (
-          <div className="flex flex-row gap-2">
-            <p className="text-muted-foreground text-base">
-              {video?.uploader.name}
-            </p>
-            <RoleBadge role={video?.uploader.role} />
-          </div>
-        ) : null}
-        <h1 className="text-foreground text-xl font-normal text-left">
-          {video?.description}
-        </h1>
+        <div className="w-full lg:w-9/12 flex flex-col gap-4">
+          <h1 className="text-foreground text-3xl font-medium text-left">
+            {video?.title}
+          </h1>
+          {video?.uploader ? (
+            <div className="flex flex-row gap-2">
+              <p className="text-muted-foreground text-base">
+                {video?.uploader.name}
+              </p>
+              <RoleBadge role={video?.uploader.role} />
+            </div>
+          ) : null}
+          <h1 className="text-foreground text-lg font-normal">
+            {video?.description}
+          </h1>
+        </div>
       </div>
     </div>
   );
 };
 
-export default VideoDetailsDialog;
+export default VideoDetails;

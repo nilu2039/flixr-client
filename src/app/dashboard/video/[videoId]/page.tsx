@@ -1,6 +1,6 @@
 "use client";
 
-import VideoDetailsDialog from "@/components/video-details";
+import VideoDetails from "@/components/video-details";
 import useVideo from "@/hooks/useVideo";
 import React from "react";
 
@@ -12,7 +12,7 @@ const Page = ({ params }: { params: { videoId: string } }) => {
   if (!video || !video.data) return <div>No video found...</div>;
   return (
     <div>
-      <VideoDetailsDialog video={video.data?.data} />
+      <VideoDetails video={video.data?.data} />
     </div>
   );
 };
