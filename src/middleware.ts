@@ -91,7 +91,7 @@ async function verifySession(authCookie: RequestCookie): Promise<{
       },
       credentials: "include",
       redirect: "follow",
-      cache: "no-cache",
+      // cache: "no-cache",
     });
     if (response.ok) {
       const data = await response.json();
