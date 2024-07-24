@@ -31,7 +31,6 @@ const formSchema = z.object({
 
 const ResetPassword = () => {
   const { passwordResetMutation } = useResetPassword(formSchema);
-  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -39,9 +38,7 @@ const ResetPassword = () => {
     passwordResetMutation.mutate(values);
     console.log(values);
   };
-  if (passwordResetMutation.isSuccess) {
-    router.replace("/dashboard");
-  }
+
   return (
     <Card className="w-[100%] sm:w-[80%] md:w-[50%] lg:w-[33%]">
       <CardHeader>

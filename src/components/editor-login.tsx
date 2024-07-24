@@ -49,6 +49,7 @@ const EditorLogin = () => {
     onSuccess: (data) => {
       if (data.data.success) {
         router.push("/dashboard");
+        router.refresh();
       }
     },
     onError: (error) => {

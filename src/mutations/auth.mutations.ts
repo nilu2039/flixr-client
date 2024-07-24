@@ -17,7 +17,7 @@ const useLogout = () => {
       }
     },
     onSuccess: () => {
-      queryClient.refetchQueries();
+      queryClient.removeQueries();
       router.push("/login");
     },
   });
@@ -26,6 +26,7 @@ const useLogout = () => {
 };
 
 const useResetPassword = (zodSchema: z.ZodObject<any, any>) => {
+  const router = useRouter();
   const passwordResetMutation = useMutation({
     mutationKey: ["reset-password"],
     mutationFn: async (values: { password: string }) => {
@@ -39,6 +40,10 @@ const useResetPassword = (zodSchema: z.ZodObject<any, any>) => {
     },
     onError: () => {
       toast.error("Error resetting password!", { richColors: true });
+    },
+    onSuccess: () => {
+      router.push("/login");
+      router.refresh();
     },
   });
   return { passwordResetMutation };
