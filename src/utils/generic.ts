@@ -1,9 +1,10 @@
 import { first } from "lodash";
 
-export const getInitials = (name?: string | null) => {
+export const getInitials = (name?: string | null, length = 2) => {
   if (!name) return "";
   return name
     .split(" ")
     .map((word) => first(word.toUpperCase()))
-    .join("");
+    .join("")
+    .slice(0, length);
 };
