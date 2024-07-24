@@ -43,6 +43,15 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  if (
+    authStatus.authenticated &&
+    authStatus.verified &&
+    path === "/reset-password"
+  ) {
+    url.pathname = "/dashboard";
+    return NextResponse.redirect(url);
+  }
+
   if (isProtectedRoute && !authStatus.authenticated) {
     return redirectToLogin(url);
   }
@@ -82,6 +91,7 @@ async function verifySession(authCookie: RequestCookie): Promise<{
       },
       credentials: "include",
       redirect: "follow",
+      cache: "no-cache",
     });
     if (response.ok) {
       const data = await response.json();

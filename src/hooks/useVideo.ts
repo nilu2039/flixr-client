@@ -40,6 +40,7 @@ const useVideo = (videoId: string) => {
     data: video,
     isLoading,
     isError,
+    error,
   } = useQuery({
     queryKey: ["video-details", videoId],
     queryFn: async () => {
@@ -56,6 +57,7 @@ const useVideo = (videoId: string) => {
     video,
     isLoading,
     isError,
+    error,
   };
 };
 
