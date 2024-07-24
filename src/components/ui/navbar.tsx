@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 import { useLogout } from "@/mutations/auth.mutations";
+import { ThemeToggle } from "../theme-toggle";
 
 type Props = {
   profileUrlImage?: string;
@@ -47,6 +48,7 @@ const Navbar: FC<Props> = ({ id, name, role, profileUrlImage, editors }) => {
           </div>
         )}
         <div className="flex flex-row gap-10 items-center">
+          <ThemeToggle />
           <Button
             variant="outline"
             size="icon"
