@@ -73,7 +73,7 @@ export const dashboardColumns: ColumnDef<Video>[] = [
       const videoId = row.original.videoId;
       return (
         <Button variant="outline" size="sm" asChild>
-          <Link href={`/video/${videoId}`}>
+          <Link href={`/dashboard/video/${videoId}`}>
             <Eye className="w-5 h-5" />
           </Link>
         </Button>

@@ -15,20 +15,45 @@ export async function middleware(request: NextRequest) {
     (route) => path.startsWith(route) || path === route
   );
 
-  const isAuthenticated = authCookie ? await verifySession(authCookie) : false;
+  const authStatus: {
+    authenticated: boolean;
+    role: "editor" | "admin" | null;
+    verified: boolean;
+  } = {
+    authenticated: false,
+    role: null,
+    verified: false,
+  };
+
+  if (authCookie) {
+    const session = await verifySession(authCookie);
+    const isAuthenticated = session.authenticated;
+    authStatus.authenticated = isAuthenticated;
+    authStatus.role = session.role;
+    authStatus.verified = session.verified;
+  }
 
   if (path === "/") {
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
 
-  if (isAuthenticated && path === loginRoute) {
+  if (authStatus.authenticated && path === loginRoute) {
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
 
-  if (isProtectedRoute && !isAuthenticated) {
+  if (isProtectedRoute && !authStatus.authenticated) {
     return redirectToLogin(url);
+  }
+
+  if (
+    isProtectedRoute &&
+    authStatus.authenticated &&
+    authStatus.role === "editor" &&
+    !authStatus.verified
+  ) {
+    return redirectToResetPassword(url);
   }
 
   return NextResponse.next();
@@ -39,7 +64,16 @@ function redirectToLogin(url: NextURL) {
   return NextResponse.redirect(url);
 }
 
-async function verifySession(authCookie: RequestCookie) {
+function redirectToResetPassword(url: NextURL) {
+  url.pathname = "/reset-password";
+  return NextResponse.redirect(url);
+}
+
+async function verifySession(authCookie: RequestCookie): Promise<{
+  authenticated: boolean;
+  role: "editor" | "admin" | null;
+  verified: boolean;
+}> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   try {
     const response = await fetch(`${apiUrl}/auth/me`, {
@@ -51,12 +85,24 @@ async function verifySession(authCookie: RequestCookie) {
     });
     if (response.ok) {
       const data = await response.json();
-      return data.success;
+      return {
+        authenticated: data.success,
+        role: data?.data?.user?.role,
+        verified: data?.data?.user?.verified,
+      };
     }
-    return false;
+    return {
+      authenticated: false,
+      role: null,
+      verified: false,
+    };
   } catch (error) {
     console.error("error", error);
-    return false;
+    return {
+      authenticated: false,
+      role: null,
+      verified: false,
+    };
   }
 }
 
