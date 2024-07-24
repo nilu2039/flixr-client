@@ -69,7 +69,13 @@ const ResetPassword = () => {
                   </>
                 )}
               />
-              <Button type="submit">Reset Password</Button>
+              <Button
+                type="submit"
+                disabled={passwordResetMutation.isLoading}
+                loading={passwordResetMutation.isLoading}
+              >
+                Reset Password
+              </Button>
             </form>
           </Form>
         </div>

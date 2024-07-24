@@ -1,5 +1,6 @@
 "use client";
 
+import FullPageLoader from "@/components/full-page-loader";
 import Navbar from "@/components/ui/navbar";
 import useAuth from "@/hooks/useAuth";
 
@@ -9,7 +10,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const { user, isLoading, isError } = useAuth();
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <FullPageLoader />;
   if (isError || !user?.data?.user) return <div>Error...</div>;
   const { id, name, role, profileUrlImage, editors } = user.data.user;
 
