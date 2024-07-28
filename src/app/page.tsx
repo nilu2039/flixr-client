@@ -26,7 +26,7 @@ export default function Home() {
       return (
         <Link href="/dashboard" className="flex flex-row gap-2 items-center">
           <p className="font-medium text-base md:text-lg">Dashboard</p>
-          <Avatar className="h-10 w-10 md:h-12 md:w-12 p-1">
+          <Avatar className="h-8 w-8 p-1">
             <AvatarImage
               src={selectedUser?.profileUrlImage}
               alt={selectedUser?.name ?? ""}
