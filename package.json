@@ -1,5 +1,6 @@
 {
-  "name": "client",
+  "name": "flixr_client",
+  "author": "Nilanjan Mandal",
   "version": "0.1.0",
   "private": true,
   "scripts": {

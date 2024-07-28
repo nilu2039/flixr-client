@@ -7,6 +7,7 @@ import { DEVELOPER_NAME } from "@/constants";
 import useAuth from "@/hooks/useAuth";
 import { getInitials } from "@/utils/generic";
 import { Loader2 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { FaGithub, FaLinkedin, FaYoutube } from "react-icons/fa";
 
@@ -24,8 +25,8 @@ export default function Home() {
     if (user?.success) {
       return (
         <Link href="/dashboard" className="flex flex-row gap-2 items-center">
-          <p className="font-medium">Dashboard</p>
-          <Avatar className="h-8 w-8 p-1">
+          <p className="font-medium text-base md:text-lg">Dashboard</p>
+          <Avatar className="h-10 w-10 md:h-12 md:w-12 p-1">
             <AvatarImage
               src={selectedUser?.profileUrlImage}
               alt={selectedUser?.name ?? ""}
@@ -45,9 +46,18 @@ export default function Home() {
   return (
     <div className="grid grid-rows-[auto_1fr_auto] p-10 min-h-dvh">
       <nav className="flex flex-row justify-between items-center">
-        <p className="text-2xl font-bold">
-          Fli<span className="text-red-600">xr</span>
-        </p>
+        <div className="flex flex-row gap-2 items-center">
+          <Image
+            src={"/logo.png"}
+            alt="Flixr Logo"
+            className="w-12 h-12"
+            width={1000}
+            height={1000}
+          />
+          <p className="text-2xl font-bold">
+            Fli<span className="text-red-600">xr</span>
+          </p>
+        </div>
         <div className="flex flex-row items-center gap-6">
           {renderSignInButton()}
           <ThemeToggle />
