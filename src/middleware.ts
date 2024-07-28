@@ -33,11 +33,6 @@ export async function middleware(request: NextRequest) {
     authStatus.verified = session.verified;
   }
 
-  if (path === "/") {
-    url.pathname = "/dashboard";
-    return NextResponse.redirect(url);
-  }
-
   if (authStatus.authenticated && path === loginRoute) {
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
@@ -91,7 +86,6 @@ async function verifySession(authCookie: RequestCookie): Promise<{
       },
       credentials: "include",
       redirect: "follow",
-      // cache: "no-cache",
     });
     if (response.ok) {
       const data = await response.json();
