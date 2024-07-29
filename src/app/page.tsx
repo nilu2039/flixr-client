@@ -87,9 +87,17 @@ export default function Home() {
         </div>
       </div>
       <footer className="flex flex-col items-center gap-4 text-muted-foreground">
-        <p className="text-center text-sm">
-          © {new Date().getFullYear()} {DEVELOPER_NAME}. All rights reserved.
-        </p>
+        <div className="flex flex-col items-center justify-center gap-2">
+          <p className="text-center text-sm">
+            © {new Date().getFullYear()} {DEVELOPER_NAME}. All rights reserved.
+          </p>
+          <Link
+            href="/privacy"
+            className="text-sm hover:underline text-muted-foreground text-center"
+          >
+            Privacy Policy
+          </Link>
+        </div>
         <div className="flex flex-row gap-8">
           <Link href={"https://github.com/nilu2039/"} target="_blank">
             <FaGithub />
