@@ -12,7 +12,8 @@ export default function DashboardLayout({
   const { user, isLoading, isError } = useAuth();
   if (isLoading) return <FullPageLoader />;
   if (isError || !user?.data?.user) return <div>Error...</div>;
-  const { id, name, role, profileUrlImage, editors } = user.data.user;
+  const { id, name, role, profileUrlImage, editors, ytChannelName } =
+    user.data.user;
 
   return (
     <section>
@@ -22,6 +23,7 @@ export default function DashboardLayout({
         role={role}
         profileUrlImage={profileUrlImage}
         editors={editors}
+        ytChannelName={ytChannelName}
       />
       {children}
     </section>

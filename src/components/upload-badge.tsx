@@ -1,5 +1,6 @@
 import { Video } from "@/hooks/useVideo";
-import { Badge } from "./ui/badge";
+import { Badge, BadgeProps } from "./ui/badge";
+import { cn } from "@/utils/ui";
 
 const UploadStatusBadge = ({ status }: { status: Video["uploadStatus"] }) => {
   let badgeColor = null;
@@ -87,14 +88,30 @@ const YoutubeUploadStatusBadge = ({
   return <Badge className={`${badgeColor}`}>{badgeText}</Badge>;
 };
 
-const RoleBadge = ({ role }: { role: Video["uploader"]["role"] }) => {
+const RoleBadge = ({
+  role,
+  className,
+  ...props
+}: { role: Video["uploader"]["role"] } & BadgeProps) => {
   switch (role) {
     case "admin":
-      return <Badge className="bg-green-500">Admin</Badge>;
+      return (
+        <Badge className={cn("bg-green-500", className)} {...props}>
+          Admin
+        </Badge>
+      );
     case "editor":
-      return <Badge className="bg-blue-500">Editor</Badge>;
+      return (
+        <Badge className={cn("bg-blue-500", className)} {...props}>
+          Editor
+        </Badge>
+      );
     default:
-      return <Badge className="bg-gray-500">Unknown</Badge>;
+      return (
+        <Badge className={cn("bg-gray-500", className)} {...props}>
+          Unknown
+        </Badge>
+      );
   }
 };
 

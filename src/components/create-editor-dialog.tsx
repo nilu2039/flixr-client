@@ -25,6 +25,7 @@ import { Input } from "./ui/input";
 
 const formSchema = z.object({
   name: z.string(),
+  email: z.string().email(),
 });
 
 const createEditorSchema = z.object({
@@ -70,7 +71,7 @@ const CreateEditorDialog: FC<Props> = ({
     },
     onSuccess: (values) => {
       onSuccessfulCreate(values.data.data);
-      queryClient.invalidateQueries(["user"]);
+      queryClient.invalidateQueries(["auth_users"]);
     },
   });
 
@@ -95,6 +96,19 @@ const CreateEditorDialog: FC<Props> = ({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
