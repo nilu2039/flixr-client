@@ -1,11 +1,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BaseUserType } from "@/hooks/useAuth";
+import { useLogout } from "@/mutations/auth.mutations";
 import { getInitials } from "@/utils/generic";
 import { cn } from "@/utils/ui";
 import { startCase } from "lodash";
 import { Upload } from "lucide-react";
 import { FC, useState } from "react";
 import TeamList from "../team-list";
+import { ThemeToggle } from "../theme-toggle";
 import UploadDialog from "../upload-dialog";
 import { Button } from "./button";
 import {
@@ -17,22 +19,32 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
-import { useLogout } from "@/mutations/auth.mutations";
-import { ThemeToggle } from "../theme-toggle";
 
 type Props = {
   profileUrlImage?: string;
   editors?: BaseUserType[];
+  ytChannelName?: string;
 } & Omit<BaseUserType, "verified">;
 
-const Navbar: FC<Props> = ({ id, name, role, profileUrlImage, editors }) => {
+const Navbar: FC<Props> = ({
+  id,
+  name,
+  role,
+  profileUrlImage,
+  editors,
+  ytChannelName,
+}) => {
   const [openUploadDialog, setOpenUploadDialog] = useState(false);
   const { logoutMutation } = useLogout();
   return (
     <div className="border-b overflow-hidden">
-      <nav className={cn("flex items-center justify-between py-4 px-6")}>
+      <nav
+        className={cn(
+          "flex flex-row items-center gap-4 lg:gap-0 justify-between py-4 px-6"
+        )}
+      >
         {role === "admin" ? (
-          <>
+          <div className="flex flex-col md:flex-row items-center gap-2 justify-between md:justify-start">
             <TeamList
               id={id}
               name={name}
@@ -40,14 +52,17 @@ const Navbar: FC<Props> = ({ id, name, role, profileUrlImage, editors }) => {
               profileUrlImage={profileUrlImage}
               editors={editors}
             />
-          </>
+            <p className="text-2xl hidden md:block">•</p>
+            <p className="text-sm text-gray-400">{ytChannelName}</p>
+          </div>
         ) : (
-          <div className="flex items-center gap-2">
-            <p className="text-lg">{name}</p>
-            <p className="text-sm text-gray-400">{role}</p>
+          <div className="flex flex-col md:flex-row items-center gap-2 justify-between md:justify-start">
+            <p className="text-2xl font-semibold">{name}</p>
+            <p className="text-2xl hidden md:block">•</p>
+            <p className="text-base text-gray-400">{ytChannelName}</p>
           </div>
         )}
-        <div className="flex flex-row gap-10 items-center">
+        <div className="flex flex-row gap-6 md:gap-7 items-center">
           <ThemeToggle />
           <Button
             variant="outline"

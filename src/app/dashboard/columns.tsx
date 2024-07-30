@@ -25,9 +25,9 @@ export const dashboardColumns: ColumnDef<Video>[] = [
     cell: ({ row }) => {
       const uploader = row.original.uploader;
       return (
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-col md:flex-row gap-2 items-center">
           <p>{uploader.name}</p>
-          <RoleBadge role={uploader.role} />
+          <RoleBadge role={uploader.role} className="max-w-fit" />
         </div>
       );
     },

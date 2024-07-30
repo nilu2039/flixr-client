@@ -86,7 +86,7 @@ const EditorLogin = () => {
                 <FormItem>
                   <FormLabel>Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="username" {...field} />
+                    <Input placeholder="username or email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -19,6 +19,7 @@ const userSchema = z.object({
       user: baseSchema.extend({
         profileUrlImage: z.string().optional(),
         editors: z.array(baseSchema).optional(),
+        ytChannelName: z.string().optional(),
       }),
     })
     .optional(),
