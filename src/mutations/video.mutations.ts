@@ -1,8 +1,10 @@
 import { Video } from "@/hooks/useVideo";
 import api from "@/lib/api";
+import { errorSchema } from "@/schema/global";
 import { AxiosError } from "axios";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "sonner";
+import { z } from "zod";
 
 export const useUploadYoutubeMutation = (videoId: string) => {
   const queryClient = useQueryClient();
@@ -72,4 +74,41 @@ export const useUpdateStatusMutation = (videoId: string) => {
   });
 
   return { updateStatusMutation };
+};
+
+export const useEditVideoMutation = ({
+  onSuccess,
+}: {
+  onSuccess: (data: typeof editVideoMutation.data) => void;
+}) => {
+  const payloadSchema = z.object({
+    videoId: z.string(),
+    title: z.string().optional(),
+    description: z.string().optional(),
+  });
+
+  const returnSchema = z.object({
+    success: z.boolean(),
+    data: z.object({
+      title: z.string().optional(),
+      description: z.string().optional(),
+      uploadUrl: z.string(),
+    }),
+    error: errorSchema.optional(),
+  });
+  const editVideoMutation = useMutation({
+    mutationKey: ["edit_video"],
+    mutationFn: async (values: z.infer<typeof payloadSchema>) => {
+      try {
+        const { data } = await api.post("/edit-video-details", values);
+        return returnSchema.safeParse(data);
+      } catch (error) {
+        throw error;
+      }
+    },
+    onSuccess: (data) => {
+      onSuccess(data);
+    },
+  });
+  return { editVideoMutation, payloadSchema };
 };
