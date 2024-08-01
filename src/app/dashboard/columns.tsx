@@ -1,5 +1,6 @@
 "use client";
 
+import EditVideo from "@/components/edit-video";
 import { Button } from "@/components/ui/button";
 import {
   RoleBadge,
@@ -78,6 +79,14 @@ export const dashboardColumns: ColumnDef<Video>[] = [
           </Link>
         </Button>
       );
+    },
+  },
+  {
+    id: "edit",
+    enableHiding: false,
+    cell: ({ row }) => {
+      const videoId = row.original.videoId;
+      return <EditVideo videoId={videoId} />;
     },
   },
   {
