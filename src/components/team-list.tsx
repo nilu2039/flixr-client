@@ -85,7 +85,10 @@ const TeamList: FC<Props> = ({ id, name, role, profileUrlImage, editors }) => {
                   {getInitials(selectedUser.name)}
                 </AvatarFallback>
               </Avatar>
-              {selectedUser.name}
+              <span className="hidden md:block">{selectedUser.name}</span>
+              <span className="block md:hidden">
+                {getInitials(selectedUser.name, 2)}
+              </span>
               <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50 text-foreground" />
             </Button>
           </PopoverTrigger>

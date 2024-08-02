@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   name: z.string(),
@@ -66,6 +67,11 @@ const CreateEditorDialog: FC<Props> = ({
         if (!res.success) throw new Error(res.error.message);
         return res;
       } catch (error) {
+        //@ts-ignore
+        const msg = error?.response?.data?.error?.message;
+        if (msg === "Email already exists") {
+          toast.error("Email already exists", { richColors: true });
+        }
         throw error;
       }
     },

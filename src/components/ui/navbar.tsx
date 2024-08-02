@@ -5,10 +5,14 @@ import { getInitials } from "@/utils/generic";
 import { cn } from "@/utils/ui";
 import { startCase } from "lodash";
 import { Upload } from "lucide-react";
+import dynamic from "next/dynamic";
 import { FC, useState } from "react";
 import TeamList from "../team-list";
 import { ThemeToggle } from "../theme-toggle";
-import UploadDialog from "../upload-dialog";
+const UploadDialog = dynamic(() => import("@/components/upload-dialog"), {
+  ssr: false,
+});
+
 import { Button } from "./button";
 import {
   DropdownMenu,

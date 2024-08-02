@@ -77,14 +77,25 @@ export const useUpdateStatusMutation = (videoId: string) => {
 };
 
 export const useEditVideoMutation = ({
-  onSuccess,
+  onSuccess = () => {},
 }: {
-  onSuccess: (data: typeof editVideoMutation.data) => void;
+  onSuccess?: (
+    data: typeof editVideoMutation.data,
+    {
+      video,
+      thumbnail,
+    }: {
+      video?: FileList;
+      thumbnail?: FileList;
+    }
+  ) => void;
 }) => {
   const payloadSchema = z.object({
     videoId: z.string(),
     title: z.string().optional(),
     description: z.string().optional(),
+    video: z.instanceof(FileList).optional(),
+    thumbnail: z.instanceof(FileList).optional(),
   });
 
   const returnSchema = z.object({
@@ -92,7 +103,8 @@ export const useEditVideoMutation = ({
     data: z.object({
       title: z.string().optional(),
       description: z.string().optional(),
-      uploadUrl: z.string(),
+      videoUploadUrl: z.string(),
+      thumbnailUploadUrl: z.string().nullable(),
     }),
     error: errorSchema.optional(),
   });
@@ -100,14 +112,21 @@ export const useEditVideoMutation = ({
     mutationKey: ["edit_video"],
     mutationFn: async (values: z.infer<typeof payloadSchema>) => {
       try {
-        const { data } = await api.post("/edit-video-details", values);
+        const { data } = await api.post("/edit-video-details", {
+          videoId: values.videoId,
+          title: values.title,
+          description: values.description,
+        });
         return returnSchema.safeParse(data);
       } catch (error) {
         throw error;
       }
     },
-    onSuccess: (data) => {
-      onSuccess(data);
+    onSuccess: (data, variables) => {
+      onSuccess(data, {
+        video: variables.video,
+        thumbnail: variables.thumbnail,
+      });
     },
   });
   return { editVideoMutation, payloadSchema };

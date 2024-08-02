@@ -14,6 +14,7 @@ export const baseVideoSchema = z.object({
   editorId: z.number().nullable(),
   adminId: z.number(),
   uploadStatus: z.enum(["idle", "pending", "completed", "failed"]),
+  thumbnailUrl: z.string().nullable().optional(),
   status: z.enum(["draft", "accepted", "rejected"]),
   youtubeUploadStatus: z.enum(["draft", "pending", "completed", "failed"]),
   uploader: z.object({

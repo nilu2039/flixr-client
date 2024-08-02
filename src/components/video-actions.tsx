@@ -12,11 +12,11 @@ import { MoreHorizontal } from "lucide-react";
 import { FC } from "react";
 
 type Props = {
-  row: Video;
+  video: Video;
 };
 
-const VideoActions: FC<Props> = ({ row }) => {
-  const { videoId } = row;
+const VideoActions: FC<Props> = ({ video }) => {
+  const { videoId } = video;
   const { user } = useAuth();
 
   const { updateStatusMutation } = useUpdateStatusMutation(videoId);
@@ -26,15 +26,40 @@ const VideoActions: FC<Props> = ({ row }) => {
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem
+    // <DropdownMenu>
+    //   <DropdownMenuTrigger asChild>
+    //     <Button variant="ghost" className="h-8 w-8 p-0">
+    //       <span className="sr-only">Open menu</span>
+    //       <MoreHorizontal className="h-4 w-4" />
+    //     </Button>
+    //   </DropdownMenuTrigger>
+    //   <DropdownMenuContent align="end">
+    //     <DropdownMenuItem
+    //       onClick={() => {
+    //         updateStatusMutation.mutate({
+    //           status: "accepted",
+    //           uploadYT: true,
+    //         });
+    //       }}
+    //     >
+    //       Accept and Upload
+    //     </DropdownMenuItem>
+    //     <DropdownMenuItem
+    //       onClick={() => {
+    //         updateStatusMutation.mutate({
+    //           status: "rejected",
+    //         });
+    //       }}
+    //     >
+    //       Reject
+    //     </DropdownMenuItem>
+    //   </DropdownMenuContent>
+    // </DropdownMenu>
+    <>
+      <div className="flex flex-row gap-2 items-center justify-center">
+        <Button
+          size="sm"
+          className=""
           onClick={() => {
             updateStatusMutation.mutate({
               status: "accepted",
@@ -42,9 +67,11 @@ const VideoActions: FC<Props> = ({ row }) => {
             });
           }}
         >
-          Accept and Upload
-        </DropdownMenuItem>
-        <DropdownMenuItem
+          Upload
+        </Button>
+        <Button
+          size="sm"
+          variant="destructive"
           onClick={() => {
             updateStatusMutation.mutate({
               status: "rejected",
@@ -52,9 +79,9 @@ const VideoActions: FC<Props> = ({ row }) => {
           }}
         >
           Reject
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </Button>
+      </div>
+    </>
   );
 };
 
