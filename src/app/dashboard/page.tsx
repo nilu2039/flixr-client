@@ -1,9 +1,9 @@
 "use client";
 
 import FullPageLoader from "@/components/full-page-loader";
+
+import VideoCard from "@/components/video-card";
 import useAllVideos from "@/hooks/useAllVideos";
-import { dashboardColumns } from "./columns";
-import { DataTable } from "./data-table";
 
 const Dashboard = () => {
   const { videos, isLoading: isVideoLoading } = useAllVideos();
@@ -12,7 +12,11 @@ const Dashboard = () => {
 
   return (
     <div>
-      <DataTable columns={dashboardColumns} data={videos.data.data} />
+      <div className="flex flex-row justify-center gap-10 flex-wrap py-4 overflow-auto">
+        {videos.data.data.map((video) => (
+          <VideoCard key={video.videoId} video={video} />
+        ))}
+      </div>
     </div>
   );
 };

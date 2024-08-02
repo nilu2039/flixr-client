@@ -1,3 +1,5 @@
+"use client";
+
 import useVideo from "@/hooks/useVideo";
 import { useEditVideoMutation } from "@/mutations/video.mutations";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,8 +17,8 @@ type Props = {
 };
 
 const formSchema = z.object({
-  title: z.string().min(1),
-  description: z.string().min(1),
+  title: z.string().min(1).max(100).optional(),
+  description: z.string().min(1).max(5000).optional(),
   video: z.instanceof(FileList),
   thumbnail: z.instanceof(FileList).optional(),
 });
@@ -24,6 +26,7 @@ const formSchema = z.object({
 const EditVideo = ({ videoId }: Props) => {
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const { video, isLoading: isVideoLoading } = useVideo(videoId);
+  const queryClient = useQueryClient();
 
   const { editVideoMutation } = useEditVideoMutation({
     onSuccess: (videoData, { video, thumbnail }) => {
@@ -58,8 +61,8 @@ const EditVideo = ({ videoId }: Props) => {
       const uploadToast = (promise: () => Promise<unknown>) => {
         toast.promise(promise, {
           loading: "Uploading video, don't refresh or close the tab.",
-          success: () => {
-            queryClient.invalidateQueries(["all_videos"]);
+          success: async () => {
+            await queryClient.invalidateQueries(["all_videos"]);
             return "Video edited successfully";
           },
           //   error: () => {
@@ -85,11 +88,6 @@ const EditVideo = ({ videoId }: Props) => {
       queryClient.invalidateQueries(["all_videos"]);
     },
   });
-  const queryClient = useQueryClient();
-  // const { openFilePicker, plainFiles, clear } = useFilePicker({
-  //   accept: "video/*",
-  //   multiple: false,
-  // });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -100,7 +98,6 @@ const EditVideo = ({ videoId }: Props) => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
     if (!video || !video.data) return;
     await editVideoMutation.mutateAsync({
       videoId: video.data.data.videoId,

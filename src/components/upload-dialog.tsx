@@ -7,15 +7,12 @@ import { FC } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "sonner";
-import { useFilePicker } from "use-file-picker";
 import { z } from "zod";
 import VideoForm from "./video-form";
 
-const isServer = typeof window === "undefined";
-
 const formSchema = z.object({
-  title: z.string().min(1),
-  description: z.string().min(1),
+  title: z.string().min(1).max(100),
+  description: z.string().min(1).max(5000),
   video: z
     .instanceof(FileList)
     .refine((file) => file?.length == 1, "Video is required."),

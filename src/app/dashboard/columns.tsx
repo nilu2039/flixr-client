@@ -17,8 +17,32 @@ import { byteToMb } from "@/utils/file-size";
 import { ColumnDef } from "@tanstack/react-table";
 import { Eye } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 export const dashboardColumns: ColumnDef<Video>[] = [
+  {
+    id: "thumbnail",
+    enableHiding: false,
+    cell: ({ row }) => {
+      const video = row.original;
+      return video.thumbnailUrl ? (
+        <>
+          {/* <AspectRatio ratio={16 / 9} className="w-full h-full bg-red-500"> */}
+          <Image
+            src={video.thumbnailUrl}
+            alt={video.title}
+            width={120}
+            height={90}
+            className="min-h-fit"
+          />
+          {/* </AspectRatio> */}
+        </>
+      ) : (
+        <></>
+      );
+    },
+  },
   {
     accessorKey: "title",
     header: "Title",
@@ -36,16 +60,16 @@ export const dashboardColumns: ColumnDef<Video>[] = [
       );
     },
   },
-  {
-    accessorKey: "fileSize",
-    header: "File Size",
-    cell: ({ row }) => {
-      const video = row.original;
-      return (
-        <span>{video.fileSize ? `${byteToMb(video.fileSize)}MB` : "NA"}</span>
-      );
-    },
-  },
+  // {
+  //   accessorKey: "fileSize",
+  //   header: "File Size",
+  //   cell: ({ row }) => {
+  //     const video = row.original;
+  //     return (
+  //       <span>{video.fileSize ? `${byteToMb(video.fileSize)}MB` : "NA"}</span>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "status",
     header: "Accepted",
@@ -96,7 +120,7 @@ export const dashboardColumns: ColumnDef<Video>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      return <VideoActions row={row.original} />;
+      return <VideoActions video={row.original} />;
     },
   },
 ];
