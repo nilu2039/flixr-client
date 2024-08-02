@@ -71,7 +71,7 @@ const VideoCard = ({ video }: Props) => {
                 <Eye className="w-5 h-5" />
               </Link>
             </Button>
-            <EditVideo videoId={video.videoId} />
+            <EditVideo video={video} />
           </div>
           <div>
             <VideoActions video={video} />

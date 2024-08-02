@@ -1,9 +1,9 @@
 "use client";
 
-import useVideo from "@/hooks/useVideo";
+import { Video } from "@/hooks/useVideo";
 import { useEditVideoMutation } from "@/mutations/video.mutations";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useQueryClient } from "react-query";
@@ -13,7 +13,7 @@ import { Button } from "./ui/button";
 import VideoForm from "./video-form";
 
 type Props = {
-  videoId: string;
+  video: Video;
 };
 
 const formSchema = z.object({
@@ -23,9 +23,8 @@ const formSchema = z.object({
   thumbnail: z.instanceof(FileList).optional(),
 });
 
-const EditVideo = ({ videoId }: Props) => {
+const EditVideo = ({ video }: Props) => {
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const { video, isLoading: isVideoLoading } = useVideo(videoId);
   const queryClient = useQueryClient();
 
   const { editVideoMutation } = useEditVideoMutation({
@@ -92,22 +91,22 @@ const EditVideo = ({ videoId }: Props) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: video?.data?.data.title,
-      description: video?.data?.data.description,
+      title: video?.title,
+      description: video?.description,
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (!video || !video.data) return;
+    if (!video) return;
     await editVideoMutation.mutateAsync({
-      videoId: video.data.data.videoId,
+      videoId: video.videoId,
       title: values.title,
       description: values.description,
       video: values.video,
       thumbnail: values.thumbnail,
     });
   };
-  if (isVideoLoading) return <Loader2 className="animate-spin" />;
+
   return (
     <>
       <Button
@@ -123,8 +122,8 @@ const EditVideo = ({ videoId }: Props) => {
         isLoading={editVideoMutation.isLoading}
         open={openEditDialog}
         onOpenChange={setOpenEditDialog}
-        defaultTitle={video?.data?.data.title}
-        defaultDescription={video?.data?.data.description}
+        defaultTitle={video?.title}
+        defaultDescription={video?.description}
       />
     </>
   );
