@@ -1,3 +1,5 @@
+"use client";
+
 import api from "@/lib/api";
 import { errorSchema } from "@/schema/global";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,24 +11,27 @@ import { useFilePicker } from "use-file-picker";
 import { z } from "zod";
 import VideoForm from "./video-form";
 
+const isServer = typeof window === "undefined";
+
 const formSchema = z.object({
-  title: z.string(),
-  description: z.string(),
+  title: z.string().min(1),
+  description: z.string().min(1),
+  video: z
+    .instanceof(FileList)
+    .refine((file) => file?.length == 1, "Video is required."),
+  thumbnail: z.instanceof(FileList).optional(),
 });
 
 const getPresignedUrlResponseSchema = z.object({
   success: z.boolean(),
   data: z
     .object({
-      uploadUrl: z.string(),
+      videoUploadUrl: z.string(),
+      thumbnailUploadUrl: z.string().nullable(),
       videoId: z.string(),
     })
     .optional(),
   error: errorSchema.optional(),
-});
-
-const getPresignedUrlPayloadSchema = formSchema.extend({
-  contentType: z.string(),
 });
 
 type Props = {
@@ -66,20 +71,25 @@ const UploadDialog: FC<Props> = ({
 
   const getPresignedUrlMutation = useMutation({
     mutationKey: ["getPresignedUrl"],
-    mutationFn: async (
-      values: z.infer<typeof getPresignedUrlPayloadSchema>
-    ) => {
+    mutationFn: async (values: z.infer<typeof formSchema>) => {
       try {
-        const { data } = await api.post("/get-upload-presigned-url", values);
+        const { data } = await api.post("/get-upload-presigned-url", {
+          title: values.title,
+          description: values.description,
+          videoContentType: values.video?.[0]?.type,
+          thumbnailContentType: values.thumbnail?.[0]?.type,
+        });
         const res = getPresignedUrlResponseSchema.safeParse(data);
         return res;
       } catch (error) {
         throw error;
       }
     },
-    onSuccess: async (values) => {
-      const uploadUrl = values.data?.data?.uploadUrl;
-      if (!uploadUrl) {
+    onSuccess: async (values, variable) => {
+      const video = variable.video?.[0];
+      const videoUploadUrl = values.data?.data?.videoUploadUrl;
+      const thumbnailUploadUrl = values.data?.data?.thumbnailUploadUrl;
+      if (!videoUploadUrl) {
         toast.error("Failed to get upload", { richColors: true });
         return;
       }
@@ -97,11 +107,25 @@ const UploadDialog: FC<Props> = ({
 
       onSuccessfulCreate();
 
-      toast.promise(
-        fetch(uploadUrl, {
+      const uploadVideoAndThumbnail = async () => {
+        if (thumbnailUploadUrl) {
+          await fetch(thumbnailUploadUrl, {
+            method: "PUT",
+            body: variable.thumbnail?.[0],
+          });
+        }
+        await fetch(videoUploadUrl, {
           method: "PUT",
-          body: plainFiles[0],
-        }),
+          body: video,
+        });
+      };
+
+      toast.promise(
+        // fetch(updateVideoUploadStatus, {
+        //   method: "PUT",
+        //   body: video,
+        // }),
+        uploadVideoAndThumbnail,
         {
           loading: "Uploading video, don't refresh or close the tab.",
           success: () => {
@@ -125,30 +149,28 @@ const UploadDialog: FC<Props> = ({
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    if (plainFiles.length === 0) {
-      toast.error("Please upload video file.", { richColors: true });
-      return;
-    }
+    console.log(values);
+    // if (videoPlainFiles.length === 0) {
+    //   toast.error("Please upload video file.", { richColors: true });
+    //   return;
+    // }
     getPresignedUrlMutation.mutate({
       title: values.title,
       description: values.description,
-      contentType: plainFiles?.[0]?.type,
+      video: values.video,
+      thumbnail: values.thumbnail,
+      // videoContentType: values.video?.[0]?.type,
+      // thumbnailContentType: values.thumbnail?.[0]?.type,
     });
   }
-  const { openFilePicker, plainFiles, clear } = useFilePicker({
-    accept: "video/*",
-    multiple: false,
-  });
+
   return (
     <VideoForm
       form={form}
       onSubmit={onSubmit}
       open={open}
       onOpenChange={onOpenChange}
-      openFilePicker={openFilePicker}
-      clear={clear}
       isLoading={getPresignedUrlMutation.isLoading}
-      plainFiles={plainFiles}
     />
   );
 };

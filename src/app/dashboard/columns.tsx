@@ -1,6 +1,9 @@
 "use client";
 
-import EditVideo from "@/components/edit-video";
+import dynamic from "next/dynamic";
+const EditVideo = dynamic(() => import("@/components/edit-video"), {
+  ssr: false,
+});
 import { Button } from "@/components/ui/button";
 import {
   RoleBadge,

@@ -1,5 +1,4 @@
 import { Clapperboard, Upload, X } from "lucide-react";
-import { FC } from "react";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import {
@@ -13,15 +12,46 @@ import {
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 
+const FileBox = ({
+  onClick = () => {},
+  files,
+  clear = () => {},
+}: {
+  onClick: () => void;
+  files: File[];
+  clear: () => void;
+}) => {
+  return (
+    <div
+      onClick={onClick}
+      className="flex border-dashed border-4 p-10 rounded-xl items-center justify-center cursor-pointer relative"
+    >
+      {files.length === 0 ? (
+        <Upload className="w-20 h-20 text-foreground" />
+      ) : (
+        <div className="flex flex-row gap-4 items-center">
+          <X
+            className="w-6 h-6 text-foreground absolute top-2 right-2"
+            onClick={clear}
+          />
+          <Clapperboard className="w-20 h-20 text-foreground" />
+          {files.map((file, index) => (
+            <div key={index}>
+              <p className="text-foreground font-semibold">{file.name}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 type Props<T> = {
   open: boolean;
   onOpenChange?: (open: boolean) => void;
-  form: any;
   onSubmit: (values: T) => void;
-  openFilePicker: () => void;
-  plainFiles: File[];
-  isLoading: boolean;
-  clear: () => void;
+  form: any;
+  isLoading?: boolean;
   defaultTitle?: string;
   defaultDescription?: string;
 };
@@ -31,13 +61,13 @@ const VideoForm = <T extends {}>({
   onOpenChange = () => {},
   form,
   onSubmit = () => {},
-  openFilePicker = () => {},
-  plainFiles,
   isLoading = false,
-  clear = () => {},
   defaultTitle,
   defaultDescription,
 }: Props<T>) => {
+  const videoFileRef = form.register("video");
+  const thumbnailFileRef = form.register("thumbnail");
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -75,30 +105,41 @@ const VideoForm = <T extends {}>({
                 </FormItem>
               )}
             />
-            <div
-              onClick={openFilePicker}
-              className="flex border-dashed border-4 p-10 rounded-xl items-center justify-center cursor-pointer relative"
-            >
-              {plainFiles.length === 0 ? (
-                <Upload className="w-20 h-20 text-foreground" />
-              ) : (
-                <div className="flex flex-row gap-4 items-center">
-                  <X
-                    className="w-6 h-6 text-foreground absolute top-2 right-2"
-                    onClick={clear}
-                  />
-                  <Clapperboard className="w-20 h-20 text-foreground" />
-                  {plainFiles.map((file, index) => (
-                    <div key={index}>
-                      <p className="text-foreground font-semibold">
-                        {file.name}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+            <FormField
+              control={form.control}
+              name="video"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Video</FormLabel>
+                  <FormControl>
+                    <Input type="file" accept="video/*" {...videoFileRef} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-            </div>
-            <div></div>
+            />
+            <FormField
+              control={form.control}
+              name="thumbnail"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Thumbnail</FormLabel>
+                  <FormControl>
+                    <Input
+                      accept="image/* "
+                      type="file"
+                      {...thumbnailFileRef}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* <FileBox
+              clear={videoClear}
+              files={videoPlainFiles}
+              onClick={openVideoFilePicker}
+            /> */}
             <Button
               type="submit"
               className="mx-auto flex"
