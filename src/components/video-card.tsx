@@ -34,7 +34,7 @@ const VideoCard = ({ video }: Props) => {
           alt={video.title}
           width={320}
           height={180}
-          className="border-b"
+          className="border-b aspect-[16/9]"
         />
         <CardDescription
           title={video.title}
