@@ -1,22 +1,24 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-
 import { MediaPlayer, MediaProvider } from "@vidstack/react";
 import {
   defaultLayoutIcons,
   DefaultVideoLayout,
 } from "@vidstack/react/player/layouts/default";
 
-import "@vidstack/react/player/styles/default/theme.css";
 import "@vidstack/react/player/styles/default/layouts/video.css";
+import "@vidstack/react/player/styles/default/theme.css";
 
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Video } from "@/hooks/useVideo";
-import { RoleBadge } from "./upload-badge";
 import { Ban } from "lucide-react";
+import Link from "next/link";
+import { RoleBadge } from "./upload-badge";
 
 type Props = {
   video: Video | null;
@@ -24,7 +26,20 @@ type Props = {
 
 const VideoDetails = ({ video }: Props) => {
   return (
-    <div className="flex flex-col items-center justify-center container p-10 gap-10 ">
+    <div className="flex flex-col items-center justify-center container p-4">
+      <Breadcrumb className="flex w-full pb-4">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/dashboard">Dashboard</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{video?.title}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <div className="flex flex-col gap-4 w-full h-full">
         {video?.videoUrl ? (
           <div className="w-full lg:w-9/12">
