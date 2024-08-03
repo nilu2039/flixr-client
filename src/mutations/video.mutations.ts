@@ -116,6 +116,7 @@ export const useEditVideoMutation = ({
           videoId: values.videoId,
           title: values.title,
           description: values.description,
+          thumbnailContentType: values.thumbnail?.[0]?.type,
         });
         return returnSchema.safeParse(data);
       } catch (error) {
