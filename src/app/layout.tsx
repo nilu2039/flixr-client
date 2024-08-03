@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import QueryClientProvider from "@/components/query-client-provider";
 import { Toaster } from "@/components/ui/sonner";
+import NextTopLoader from "nextjs-toploader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,7 +28,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <QueryClientProvider>{children}</QueryClientProvider>
+          <QueryClientProvider>
+            <NextTopLoader color="tomato" />
+            {children}
+          </QueryClientProvider>
           <Toaster />
         </ThemeProvider>
       </body>
